@@ -1,6 +1,6 @@
 # Weather Trend Forecasting
 
-**PM Accelerator Tech Assessment — Advanced Track**
+## PM Accelerator Tech Assessment — Advanced Track
 
 ---
 
@@ -33,12 +33,13 @@ correlation, feature importance, and spatial visualization.
 - Worldwide daily/hourly weather data
 - Covers temperature, precipitation, wind, air quality, astronomical data, and more
 
-> **Note:** If the CSV is not present, the notebook automatically generates a realistic
-> synthetic dataset so all code runs end-to-end without manual intervention.
+> **Note:** The notebook downloads the dataset automatically via `kagglehub` when Kaggle
+> credentials are configured. A local CSV at `data/GlobalWeatherRepository.csv` is used
+> as a fallback if kagglehub is unavailable.
 
 ## Repository Structure
 
-```
+```text
 weatherTrendForecasting/
 ├── data/
 │   └── GlobalWeatherRepository.csv   ← place Kaggle CSV here
@@ -50,7 +51,7 @@ weatherTrendForecasting/
 ## Analysis Sections
 
 | # | Section | Key Techniques |
-|---|---------|---------------|
+| --- | --- | --- |
 | 1 | Data Loading & Exploration | Shape, dtypes, descriptive stats |
 | 2 | Data Cleaning & Preprocessing | Missing value imputation, Winsorization, feature engineering, normalization |
 | 3 | Exploratory Data Analysis | Temperature/precipitation/wind/humidity distributions, correlations, geographic patterns |
@@ -95,12 +96,16 @@ pip install -r requirements.txt
 > See the [Prophet installation guide](https://facebook.github.io/prophet/docs/installation.html)
 > if the standard pip install fails.
 
-### 4. Add the dataset
+### 4. Configure Kaggle credentials
 
-Download `GlobalWeatherRepository.csv` from [Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/global-weather-repository)
+The notebook downloads the dataset automatically via `kagglehub`.
+
+1. Go to [kaggle.com](https://www.kaggle.com) → Account → **Create New Token** — this downloads `kaggle.json`.
+2. Place it at `~/.kaggle/kaggle.json` (macOS/Linux) or `%USERPROFILE%\.kaggle\kaggle.json` (Windows).
+
+Alternatively, download `GlobalWeatherRepository.csv` manually from
+[Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/global-weather-repository)
 and place it at `data/GlobalWeatherRepository.csv`.
-
-If the file is absent, the notebook generates synthetic data automatically.
 
 ### 5. Launch Jupyter and run the notebook
 
@@ -119,10 +124,9 @@ Run all cells: **Kernel → Restart & Run All**
 ## Key Libraries
 
 | Library | Purpose |
-|---------|---------|
+| --- | --- |
 | pandas, numpy | Data manipulation |
 | matplotlib, seaborn | Static visualizations |
-| plotly | Interactive charts |
 | folium | Interactive geographic maps |
 | scikit-learn | ML models, preprocessing, metrics |
 | xgboost | Gradient-boosted forecasting |
@@ -130,13 +134,14 @@ Run all cells: **Kernel → Restart & Run All**
 | prophet | Trend/seasonality decomposition and forecasting |
 | shap | Model explainability (SHAP values) |
 | scipy | Statistical tests |
+| kagglehub | Automatic dataset download from Kaggle |
 
 ## Output Files
 
 After running the notebook, the following images are saved to the working directory:
 
 | File | Description |
-|------|-------------|
+| --- | --- |
 | `missing_values.png` | Missing data bar chart |
 | `outlier_analysis.png` | Box plots + distributions for key features |
 | `temperature_analysis.png` | Global temperature EDA dashboard |
@@ -168,22 +173,26 @@ After running the notebook, the following images are saved to the working direct
 ## Methodology Summary
 
 ### Data Cleaning
+
 - **Missing values**: median fill for numeric columns (<30% missing), mode fill for categorical; columns with >30% missing are dropped.
 - **Outliers**: Winsorization (cap at 1.5×IQR bounds) preserves sample size while removing extremes.
 - **Feature engineering**: datetime decomposition (year, month, day, hour, quarter, season), hemisphere-aware seasons, apparent temperature (Steadman formula).
 - **Normalization**: StandardScaler applied to all numeric features for ML use.
 
 ### EDA
+
 - Distribution plots, box plots, violin plots, scatter plots across temperature, precipitation, wind, humidity, and UV index.
 - Correlation analysis via Pearson matrix and Mutual Information.
 - Geographic and seasonal patterns explored at city, country, and continental level.
 
 ### Anomaly Detection
+
 - **Statistical**: Z-score (|z| > 3) and IQR (3× fence) — fast, interpretable.
 - **ML-based**: Isolation Forest and LOF (contamination = 3%) — captures multivariate anomalies.
 - Consensus anomalies (flagged by both methods) are profiled and visualized.
 
 ### Forecasting Models
+
 1. **SARIMA(2,1,2)(1,1,1,7)** — classical time series with weekly seasonality.
 2. **Prophet** — Facebook's trend + seasonality decomposition model.
 3. **XGBoost** — gradient-boosted trees on lag features (1, 2, 3, 7, 14, 21, 30 days), rolling statistics (7/14/30 day windows), and date features.
@@ -192,6 +201,7 @@ After running the notebook, the following images are saved to the working direct
 Models evaluated on a held-out test set (~15% of data) using MAE, RMSE, R², and MAPE.
 
 ### Advanced Analyses
+
 - **Climate analysis**: monthly normals and variability by continent, precipitation seasonality.
 - **Environmental impact**: PM2.5/PM10 concentration benchmarked against WHO and US EPA standards; correlation with wind speed, temperature, and humidity.
 - **Feature importance**: Random Forest importance scores, Mutual Information, and SHAP tree explainability.
@@ -200,13 +210,14 @@ Models evaluated on a held-out test set (~15% of data) using MAE, RMSE, R², and
 ## Results Summary
 
 | Model | Evaluation |
-|-------|-----------|
+| --- | --- |
 | SARIMA | Solid baseline; captures weekly and seasonal patterns |
 | Prophet | Robust trend detection; good for long-range projections |
 | XGBoost | Best short-term accuracy; highly sensitive to lag features |
 | **Ensemble** | **Lowest RMSE overall**; benefits from model diversity |
 
 Key findings:
+
 - Dewpoint temperature is the single strongest predictor of ambient temperature.
 - Wind speed is the strongest negative correlate of PM2.5 air pollution.
 - Continental interiors have the highest seasonal temperature variability.
