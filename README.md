@@ -57,7 +57,7 @@ weatherTrendForecasting/
 | 3 | Exploratory Data Analysis | Temperature/precipitation/wind/humidity distributions, correlations, geographic patterns |
 | 4 | Anomaly Detection | Z-score, IQR (3×), Isolation Forest, Local Outlier Factor (LOF), PCA visualization |
 | 5 | Time Series Analysis | ADF stationarity test, seasonal decomposition, ACF/PACF |
-| 6 | Forecasting — SARIMA | SARIMA(2,1,2)(1,1,1,7), 30-day forecast |
+| 6 | Forecasting — SARIMA | SARIMA(1,0,1)(1,1,1,12) on monthly aggregation, 6-month forecast |
 | 7 | Forecasting — Prophet | Trend + yearly/weekly seasonality components |
 | 8 | Forecasting — XGBoost | Lag features, rolling statistics, date features |
 | 9 | Ensemble Model | Inverse-RMSE weighted average of all models |
@@ -179,6 +179,13 @@ After running the notebook, the following images are saved to the working direct
 - **Feature engineering**: datetime decomposition (year, month, day, hour, quarter, season), hemisphere-aware seasons, apparent temperature (Steadman formula).
 - **Normalization**: StandardScaler applied to all numeric features for ML use.
 
+### Time Series Construction
+
+- Filtered to Western/Central Europe (35–70°N, 10°W–40°E) to obtain a coherent annual seasonal signal. Global NH averaging mixes incompatible climate zones (Arctic Norway, tropical India) that blur the seasonal wave SARIMA needs.
+- Resampled to daily means; short gaps filled with linear time interpolation (max 3 days).
+- Rolling median outlier correction (14-day window, 3σ threshold with 1.5°C minimum floor) removes data-quality spikes without over-smoothing seasonal transitions.
+- Train/test split snapped to a calendar month boundary (~85%/15%) so SARIMA trains on complete seasonal cycles.
+
 ### EDA
 
 - Distribution plots, box plots, violin plots, scatter plots across temperature, precipitation, wind, humidity, and UV index.
@@ -193,12 +200,12 @@ After running the notebook, the following images are saved to the working direct
 
 ### Forecasting Models
 
-1. **SARIMA(2,1,2)(1,1,1,7)** — classical time series with weekly seasonality.
-2. **Prophet** — Facebook's trend + seasonality decomposition model.
-3. **XGBoost** — gradient-boosted trees on lag features (1, 2, 3, 7, 14, 21, 30 days), rolling statistics (7/14/30 day windows), and date features.
-4. **Ensemble** — inverse-RMSE weighted average of all three models.
+1. **SARIMA(1,0,1)(1,1,1,12)** — seasonal ARIMA on monthly-aggregated European temperature data. Period=12 captures the annual seasonal cycle. Monthly aggregation is used because daily SARIMA with period=365 is computationally prohibitive and the dataset spans ~2 years (insufficient for daily seasonal estimation).
+2. **Prophet** — Facebook's trend + seasonality decomposition model; handles missing data and multiple seasonalities robustly.
+3. **XGBoost** — gradient-boosted trees on lag features (1, 2, 3, 7, 14, 21, 30 days), rolling statistics (7/14/30-day windows), and date features (month, hour, day-of-week, quarter).
+4. **Ensemble** — inverse-RMSE weighted average of all three models; SARIMA contributes monthly-interpolated daily values.
 
-Models evaluated on a held-out test set (~15% of data) using MAE, RMSE, R², and MAPE.
+Models evaluated on a season-aligned held-out test set (split at a calendar month boundary, ~15% of data) using MAE, RMSE, R², and MAPE.
 
 ### Advanced Analyses
 
@@ -211,14 +218,14 @@ Models evaluated on a held-out test set (~15% of data) using MAE, RMSE, R², and
 
 | Model | Evaluation |
 | --- | --- |
-| SARIMA | Solid baseline; captures weekly and seasonal patterns |
+| SARIMA | Monthly seasonal baseline; captures annual temperature cycle via period=12 |
 | Prophet | Robust trend detection; good for long-range projections |
 | XGBoost | Best short-term accuracy; highly sensitive to lag features |
 | **Ensemble** | **Lowest RMSE overall**; benefits from model diversity |
 
 Key findings:
 
-- Dewpoint temperature is the single strongest predictor of ambient temperature.
+- Feels-like temperature (`feels_like_celsius`) is the single strongest predictor of ambient temperature.
 - Wind speed is the strongest negative correlate of PM2.5 air pollution.
 - Continental interiors have the highest seasonal temperature variability.
 - The ensemble model consistently outperforms any individual model on the test set.
