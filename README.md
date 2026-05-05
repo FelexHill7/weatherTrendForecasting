@@ -42,8 +42,13 @@ correlation, feature importance, and spatial visualization.
 ```text
 weatherTrendForecasting/
 ├── data/
-│   └── GlobalWeatherRepository.csv   ← place Kaggle CSV here
-├── weather_forecasting.ipynb          ← main analysis notebook
+│   └── GlobalWeatherRepository.csv        
+├── plots/                                 ← generated output images
+│   ├── missing_values.png
+│   ├── temperature_analysis.png
+│   └── ... (28 PNG files total)
+├── interactive_weather_map.html           ← interactive plotly heatmap
+├── weather_forecasting.ipynb              ← main analysis notebook
 ├── requirements.txt
 └── README.md
 ```
@@ -128,6 +133,7 @@ Run all cells: **Kernel → Restart & Run All**
 | pandas, numpy | Data manipulation |
 | matplotlib, seaborn | Static visualizations |
 | folium | Interactive geographic maps |
+| plotly | Additional interactive charts |
 | scikit-learn | ML models, preprocessing, metrics |
 | xgboost | Gradient-boosted forecasting |
 | statsmodels | SARIMA time series model |
@@ -138,37 +144,39 @@ Run all cells: **Kernel → Restart & Run All**
 
 ## Output Files
 
-After running the notebook, the following images are saved to the working directory:
+After running the notebook, images are saved to `plots/` and the interactive map to the project root:
 
 | File | Description |
 | --- | --- |
-| `missing_values.png` | Missing data bar chart |
-| `outlier_analysis.png` | Box plots + distributions for key features |
-| `temperature_analysis.png` | Global temperature EDA dashboard |
-| `precipitation_wind_humidity.png` | Precip, wind, humidity analysis |
-| `correlation_heatmap.png` | Feature correlation matrix |
-| `geographic_patterns.png` | Temperature by country and continent |
-| `statistical_anomalies.png` | Z-score anomalies on time series |
-| `ml_anomaly_detection.png` | Isolation Forest & LOF (PCA projection) |
-| `time_series_decomposition.png` | Trend + seasonality + residual |
-| `acf_pacf.png` | Autocorrelation and partial autocorrelation |
-| `sarima_forecast.png` | SARIMA test forecast + 30-day projection |
-| `prophet_forecast.png` | Prophet forecast plot |
-| `prophet_components.png` | Prophet trend/seasonality components |
-| `xgboost_forecast.png` | XGBoost test forecast |
-| `model_comparison.png` | All models vs actual on test period |
-| `model_rmse_comparison.png` | Model RMSE bar chart |
-| `climate_normals.png` | Monthly climate normals by continent |
-| `climate_variability.png` | Temperature variability heatmap |
-| `precipitation_by_continent.png` | Monthly precipitation by continent |
-| `air_quality_distributions.png` | PM2.5, PM10, NO2, O3 distributions |
-| `aq_weather_correlation.png` | Air quality vs weather correlation heatmap |
-| `pm25_by_country.png` | Top polluted countries (PM2.5) |
-| `feature_importance.png` | RF importance + mutual information |
-| `shap_values.png` | SHAP summary plots |
-| `temperature_map.png` | Global temperature scatter map |
-| `precipitation_map.png` | Global precipitation scatter map |
-| `interactive_weather_map.html` | Interactive Folium map |
+| `plots/missing_values.png` | Missing data bar chart |
+| `plots/outlier_analysis.png` | Box plots + distributions for key features |
+| `plots/temperature_analysis.png` | Global temperature EDA dashboard |
+| `plots/precipitation_wind_humidity.png` | Precip, wind, humidity analysis |
+| `plots/correlation_heatmap.png` | Feature correlation matrix |
+| `plots/geographic_patterns.png` | Temperature by country and continent |
+| `plots/weather_conditions.png` | Weather condition category breakdown |
+| `plots/statistical_anomalies.png` | Z-score anomalies on time series |
+| `plots/ml_anomaly_detection.png` | Isolation Forest & LOF (PCA projection) |
+| `plots/time_series_decomposition.png` | Trend + seasonality + residual |
+| `plots/acf_pacf.png` | Autocorrelation and partial autocorrelation |
+| `plots/sarima_forecast.png` | SARIMA test forecast + 6-month projection |
+| `plots/prophet_forecast.png` | Prophet forecast plot |
+| `plots/prophet_components.png` | Prophet trend/seasonality components |
+| `plots/xgboost_forecast.png` | XGBoost test forecast |
+| `plots/model_comparison.png` | All models vs actual on test period |
+| `plots/model_rmse_comparison.png` | Model RMSE bar chart |
+| `plots/climate_normals.png` | Monthly climate normals by continent |
+| `plots/climate_variability.png` | Temperature variability heatmap |
+| `plots/precipitation_by_continent.png` | Monthly precipitation by continent |
+| `plots/air_quality_distributions.png` | PM2.5, PM10, NO2, O3 distributions |
+| `plots/aq_scatter.png` | Air quality scatter plots vs weather variables |
+| `plots/aq_weather_correlation.png` | Air quality vs weather correlation heatmap |
+| `plots/pm25_by_country.png` | Top polluted countries (PM2.5) |
+| `plots/feature_importance.png` | RF importance + mutual information |
+| `plots/shap_values.png` | SHAP summary plots |
+| `plots/temperature_map.png` | Global temperature scatter map |
+| `plots/precipitation_map.png` | Global precipitation scatter map |
+| `interactive_weather_map.html` | Interactive Folium heatmap (root directory) |
 
 ## Methodology Summary
 
