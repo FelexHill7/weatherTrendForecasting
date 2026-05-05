@@ -41,14 +41,8 @@ correlation, feature importance, and spatial visualization.
 
 ```text
 weatherTrendForecasting/
-├── data/
-│   └── GlobalWeatherRepository.csv        
-├── plots/                                 ← generated output images
-│   ├── missing_values.png
-│   ├── temperature_analysis.png
-│   └── ... (28 PNG files total)
-├── interactive_weather_map.html           ← interactive plotly heatmap
-├── weather_forecasting.ipynb              ← main analysis notebook
+│   └── GlobalWeatherRepository.csv   
+├── weather_forecasting.ipynb          ← main analysis notebook
 ├── requirements.txt
 └── README.md
 ```
@@ -101,16 +95,6 @@ pip install -r requirements.txt
 > See the [Prophet installation guide](https://facebook.github.io/prophet/docs/installation.html)
 > if the standard pip install fails.
 
-### 4. Configure Kaggle credentials
-
-The notebook downloads the dataset automatically via `kagglehub`.
-
-1. Go to [kaggle.com](https://www.kaggle.com) → Account → **Create New Token** — this downloads `kaggle.json`.
-2. Place it at `~/.kaggle/kaggle.json` (macOS/Linux) or `%USERPROFILE%\.kaggle\kaggle.json` (Windows).
-
-Alternatively, download `GlobalWeatherRepository.csv` manually from
-[Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/global-weather-repository)
-and place it at `data/GlobalWeatherRepository.csv`.
 
 ### 5. Launch Jupyter and run the notebook
 
